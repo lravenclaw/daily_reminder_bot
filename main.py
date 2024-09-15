@@ -252,8 +252,8 @@ async def main() -> None:
     async with application:
         await application.start()
         await webserver.serve()
-        if not await webhook_set():
-            await application.bot.set_webhook(url=f"{URL}/telegram", allowed_updates=Update.ALL_TYPES)
+        #if not await webhook_set():
+        #    await application.bot.set_webhook(url=f"{URL}/telegram", allowed_updates=Update.ALL_TYPES)
         await application.stop()
 
 
