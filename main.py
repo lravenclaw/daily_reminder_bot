@@ -12,7 +12,7 @@ from settings import ADMIN_ID
 
 import os
 import datetime
-from services.tools.deadline import days_until_new_year
+from services.tools.time_calc import days_until_new_year
 
 import messages
 
