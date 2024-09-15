@@ -5,4 +5,5 @@ certifi
 tornado>=5.1
 python-dotenv
 pytz
-Flask
+Flask==2.0.1
+gunicorn==20.1.0
