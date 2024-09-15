@@ -7,3 +7,6 @@ load_dotenv()
 
 ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 ADMIN_ID = os.getenv("ADMIN_ID")
+
+PORT = os.getenv("PORT")
+WEBHOOK_URL = os.getenv("WEBHOOK_URL")
