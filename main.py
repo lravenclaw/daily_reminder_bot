@@ -33,7 +33,7 @@ from telegram.ext import (
     filters,
 )
 
-from settins import ACCESS_TOKEN, ADMIN_ID, PORT, URL
+from settings import ACCESS_TOKEN, ADMIN_ID, PORT, URL
 import messages
 
 logging.basicConfig(
@@ -47,6 +47,7 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 
 logger = logging.getLogger(__name__)
 
+flask_app = Flask(__name__)
 
 @dataclass
 class WebhookUpdate:
@@ -76,7 +77,7 @@ async def webhook_update(update: WebhookUpdate, context: CustomContext) -> None:
     chat_member = await context.bot.get_chat_member(chat_id=update.user_id, user_id=update.user_id)
     payloads = context.user_data.setdefault("payloads", [])
     payloads.append(update.payload)
-    combined_payloads = "</code>\n• <code>".join(payloads)ы
+    combined_payloads = "</code>\n• <code>".join(payloads)
     text = (
         f"The user {chat_member.user.mention_html()} has sent a new payload. "
         f"So far they have sent the following payloads: \n\n• <code>{combined_payloads}</code>"
@@ -155,7 +156,7 @@ async def unknown(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text=messages.unknown_command)
 
 
-def main() -> None:
+async def main() -> None:
     """Set up PTB application and a web application for handling the incoming requests."""
     context_types = ContextTypes(context=CustomContext)
 
@@ -196,7 +197,7 @@ def main() -> None:
     application.bot.set_webhook(url=f"{URL}/telegram", allowed_updates=Update.ALL_TYPES)
 
     # Set up webserver
-    flask_app = Flask(__name__)
+    # --------------
 
     @flask_app.post("/telegram")  # type: ignore[misc]
     async def telegram() -> Response:
@@ -242,6 +243,10 @@ def main() -> None:
             host="0.0.0.0",
         )
     )
+
+    # Run debug in separate thread
+    response = requests.get(f"https://api.telegram.org/bot{ACCESS_TOKEN}/setWebhook?url={URL}")
+    logger.info(f"Webhook set response: {response.json()}")
 
     # Run application and webserver together
     async with application:

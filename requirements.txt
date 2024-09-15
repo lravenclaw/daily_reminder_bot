@@ -5,6 +5,6 @@ certifi
 tornado>=5.1
 python-dotenv
 pytz
-flask[async]>=2.3.2
-uvicorn>=0.23.2
-asgiref>=3.7.2
+flask[async]~=2.3.2
+uvicorn~=0.23.2 
+asgiref~=3.7.2
