@@ -1,18 +1,20 @@
 import logging
 from uuid import uuid4
 
+import os
+import datetime
+
 from telegram import Update, InlineQueryResultArticle, InputTextMessageContent
 from telegram.constants import ParseMode
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, MessageHandler, filters, InlineQueryHandler
 
-import exceptions
-
 from settings import ACCESS_TOKEN
 from settings import ADMIN_ID
 
-import os
-import datetime
+import exceptions
+
 from services.tools.time_calc import days_until_new_year
+from services.api.qoute import get_random_quoute
 
 import messages
 
@@ -40,12 +42,12 @@ async def subscribe(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if subscribed(update.effective_chat.id, context):
         return
     
-    await context.bot.send_message(chat_id=update.effective_chat.id, text=messages.subcribed_succesfully)
+    await context.bot.send_message(chat_id=update.effective_chat.id, text=messages.subscribed_successfully)
 
     job_name = str(update.effective_chat.id)
     morning_time = datetime.time(hour=5, minute=00, second=0)
     #context.job_queue.run_daily(send_motivation, time=morning_time, chat_id=update.effective_chat.id)
-    context.job_queue.run_repeating(send_motivation, interval=1, first=0, chat_id=update.effective_chat.id, name=job_name)
+    context.job_queue.run_repeating(send_motivation, interval=10, first=0, chat_id=update.effective_chat.id, name=job_name)
 
 
 def remove_job_if_exists(name: str, context: ContextTypes.DEFAULT_TYPE) -> bool:
@@ -70,8 +72,17 @@ async def reset(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def send_motivation(context: ContextTypes.DEFAULT_TYPE) -> None:
     job = context.job
-    amount_of_days = days_until_new_year()
-    await context.bot.send_message(chat_id=job.chat_id, text=f"До нового года осталось {amount_of_days} дней")
+    amout_of_days = days_until_new_year()
+
+    days_form = 'days' if amout_of_days != 1 else 'day'
+    verb_form = 'are' if amout_of_days != 1 else 'is'
+
+    answer = f"""
+<blockquote>{get_random_quoute()}</blockquote>
+
+There {verb_form} <code>{amout_of_days}</code> {days_form} left until the New Year.
+"""
+    await context.bot.send_message(chat_id=job.chat_id, text=answer, parse_mode=ParseMode.HTML)
 
 
 async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -80,9 +91,9 @@ async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
     
     text = f"""
-    📊 Статистика бота
+    📊 Bot Statistics
 
-    Всего пользователей: {len(context.job_queue.jobs())}
+    Total users: {len(context.job_queue.jobs())}
     """
         
     await context.bot.send_message(chat_id=update.effective_chat.id, text=text)

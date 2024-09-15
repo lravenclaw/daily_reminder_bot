@@ -1,31 +1,31 @@
 # Start -------------------
 commands_description = """
-1. /subscribe - включить рассылку.
-4. /reset - отменить рассылку.
+1. /subscribe - enable subscription.
+2. /reset - cancel subscription.
 
-🔧 Администраторские команды:
-   /stats - статистика.
-   /help - получить список всех команд.
+🔧 Administrative commands:
+   /stats - statistics.
+   /help - get a list of all commands.
 """
 
-start = f"""Привет!
+start = f"""Hey!
 
-🚀 Быстрый старт:
+🚀 Quick start:
 {commands_description}
 """
 
 # Registration process -------------------
-subcribed_succesfully = """
-        🎉 Отлично, теперь ты готов к получений ежедневной мотивации!
+subscribed_successfully = """
+                  🎉 Great, now you are ready to receive daily motivation!
 """
 
-subcribed_already= "Ты уже подписан на рассылку."
+subscribed_already = "You are already subscribed to the newsletter."
 
-reset_succesfully = "Рассылка успешно отключена"
+reset_successfully = "Subscription successfully canceled."
 
 # Errors -------------------
-smth_went_wrong= "⚠️ Что-то пошло не так."
+smth_went_wrong = "⚠️ Something went wrong."
 
-unknown_command = "Прости, я не понимаю эту команду."
+unknown_command = "Sorry, I don't understand this command."
 
-not_admin = "⚠️ У вас нет прав для этой команды."
+not_admin = "⚠️ You do not have permission for this command."
