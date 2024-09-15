@@ -33,7 +33,7 @@ from telegram.ext import (
     filters,
 )
 
-from settins import ACCESS_TOKEN, ADMIN_ID, PORT, WEBHOOK_URL
+from settins import ACCESS_TOKEN, ADMIN_ID, PORT, URL
 import messages
 
 logging.basicConfig(
