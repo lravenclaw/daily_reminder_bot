@@ -8,13 +8,10 @@ from telegram import Update, InlineQueryResultArticle, InputTextMessageContent
 from telegram.constants import ParseMode
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, MessageHandler, filters, InlineQueryHandler
 
+import pytz
+
 from settings import ACCESS_TOKEN
 from settings import ADMIN_ID
-
-import exceptions
-
-from services.tools.time_calc import days_until_new_year
-from services.api.qoute import get_random_quoute
 
 import messages
 
@@ -45,9 +42,9 @@ async def subscribe(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text=messages.subscribed_successfully)
 
     job_name = str(update.effective_chat.id)
-    morning_time = datetime.time(hour=5, minute=00, second=0)
-    #context.job_queue.run_daily(send_motivation, time=morning_time, chat_id=update.effective_chat.id)
-    context.job_queue.run_repeating(send_motivation, interval=10, first=0, chat_id=update.effective_chat.id, name=job_name)
+    tz = pytz.timezone('Europe/Minsk')
+    morning_time = datetime.time(hour=5, minute=0, second=0, tzinfo=tz)
+    context.job_queue.run_daily(send_motivation, morning_time, chat_id=update.effective_chat.id, name=job_name)
 
 
 def remove_job_if_exists(name: str, context: ContextTypes.DEFAULT_TYPE) -> bool:
@@ -67,21 +64,12 @@ async def reset(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
     remove_job_if_exists(str(chat_id), context)
 
-    await context.bot.send_message(chat_id=chat_id, text=messages.reset_succesfully)
+    await context.bot.send_message(chat_id=chat_id, text=messages.reset_successfully)
 
 
 async def send_motivation(context: ContextTypes.DEFAULT_TYPE) -> None:
     job = context.job
-    amout_of_days = days_until_new_year()
-
-    days_form = 'days' if amout_of_days != 1 else 'day'
-    verb_form = 'are' if amout_of_days != 1 else 'is'
-
-    answer = f"""
-<blockquote>{get_random_quoute()}</blockquote>
-
-There {verb_form} <code>{amout_of_days}</code> {days_form} left until the New Year.
-"""
+    answer = messages.get_daily_motivation_message()
     await context.bot.send_message(chat_id=job.chat_id, text=answer, parse_mode=ParseMode.HTML)
 
 
