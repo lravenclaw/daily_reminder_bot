@@ -244,7 +244,7 @@ async def main() -> None:
             app=WsgiToAsgi(flask_app),
             port=PORT,
             use_colors=False,
-            host="0.0.0.0",
+            host="127.0.0.1",
         )
     )
 
