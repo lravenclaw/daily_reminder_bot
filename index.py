@@ -1,5 +1,5 @@
 from flask import Flask
-import main
+from main import main
 
 app = Flask(__name__)
 
@@ -8,4 +8,4 @@ def index_route():
     return "Bot works!"
 
 if __name__ == '__main__':
-    main.main()
+    main()
