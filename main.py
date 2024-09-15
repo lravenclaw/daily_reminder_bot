@@ -156,6 +156,13 @@ async def unknown(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text=messages.unknown_command)
 
 
+async def webhook_set():
+    """Check if the webhook is set up."""
+    response = requests.get(f"https://api.telegram.org/bot{ACCESS_TOKEN}/getWebhookInfo").json()
+    if response["result"]["url"] == f"{URL}/telegram":
+        return true
+    return false
+
 async def main() -> None:
     """Set up PTB application and a web application for handling the incoming requests."""
     context_types = ContextTypes(context=CustomContext)
@@ -194,7 +201,7 @@ async def main() -> None:
     application.add_handler(TypeHandler(type=WebhookUpdate, callback=webhook_update))
 
     # Pass webhook settings to telegram
-    await application.bot.set_webhook(url=f"{URL}/telegram", allowed_updates=Update.ALL_TYPES)
+    #await application.bot.set_webhook(url=f"{URL}/telegram", allowed_updates=Update.ALL_TYPES)
 
     @flask_app.post("/telegram")  # type: ignore[misc]
     async def telegram() -> Response:
@@ -241,14 +248,12 @@ async def main() -> None:
         )
     )
 
-    # Run debug in separate thread
-    response = requests.get(f"https://api.telegram.org/bot{ACCESS_TOKEN}/setWebhook?url={URL}")
-    logger.info(f"Webhook set response: {response.json()}")
-
     # Run application and webserver together
     async with application:
         await application.start()
         await webserver.serve()
+        if not await webhook_set():
+            await application.bot.set_webhook(url=f"{URL}/telegram", allowed_updates=Update.ALL_TYPES)
         await application.stop()
 
 
