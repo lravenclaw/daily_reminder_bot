@@ -206,7 +206,7 @@ async def main() -> None:
     @flask_app.post("/telegram")  # type: ignore[misc]
     async def telegram() -> Response:
         """Handle incoming Telegram updates by putting them into the `update_queue`"""
-        await application.update_queue.put(Update.de_json(data=request.json, bot=application.bot))
+        await application.update_queue.put(Update.de_json(request.get_json(force=True), bot = application.bot))
         return Response(status=HTTPStatus.OK)
 
     @flask_app.route("/submitpayload", methods=["GET", "POST"])  # type: ignore[misc]
