@@ -119,6 +119,8 @@ def main() -> None:
 
     application.run_polling()
 
+# Vercel serverless function handler
+app = main
 
 if __name__ == '__main__':
     main()
