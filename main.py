@@ -187,7 +187,7 @@ def main() -> None:
     application.add_handler(TypeHandler(type=WebhookUpdate, callback=webhook_update))
 
     # Pass webhook settings to telegram
-    await application.bot.set_webhook(url=f"{URL}/telegram", allowed_updates=Update.ALL_TYPES)
+    application.bot.set_webhook(url=f"{URL}/telegram", allowed_updates=Update.ALL_TYPES)
 
     # Set up webserver
     flask_app = Flask(__name__)
