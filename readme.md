@@ -20,12 +20,14 @@
     ```
 
 4. **Create a `.env` file in the root directory and add the following:**
+    ```
+    cp .env.example .env
+    ```
+    Replace `<your_bot_token>` with the token you get from BotFather when you create a new bot.
     ```sh
     BOT_TOKEN="<your_bot_token>"
     ADMIN_ID="<your_admin_id>"
     ```
-
-    Replace `<your_bot_token>` with the token you get from BotFather when you create a new bot.
 
 4. **Run the bot:**
     ```sh
