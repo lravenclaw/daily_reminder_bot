@@ -196,9 +196,6 @@ async def main() -> None:
     # Pass webhook settings to telegram
     application.bot.set_webhook(url=f"{URL}/telegram", allowed_updates=Update.ALL_TYPES)
 
-    # Set up webserver
-    # --------------
-
     @flask_app.post("/telegram")  # type: ignore[misc]
     async def telegram() -> Response:
         """Handle incoming Telegram updates by putting them into the `update_queue`"""
