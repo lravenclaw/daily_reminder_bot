@@ -40,5 +40,5 @@
     ```
 ---
 
-## Ready for Heroky deployment!
+## Ready for Heroku deployment!
     
