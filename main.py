@@ -118,7 +118,8 @@ def main() -> None:
     application.add_handler(text_message_handler)
 
     application.run_polling()
-    
+    pass
+
 
 if __name__ == '__main__':
     main()
